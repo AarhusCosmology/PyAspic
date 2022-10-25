@@ -1,15 +1,18 @@
-from setuptools import Extension, setup
+from distutils.core import setup
+from distutils.extension import Extension
 from Cython.Build import cythonize
-setup(
-    ext_modules = cythonize([
-        Extension("pyaspic", ["pyaspic.pyx"],
-        extra_compile_args=['-fPIC', '-O3', '-lgfortran','-lquadmath','-std=c99'],
 
-#        extra_compile_args=['libaspic.a']
-        #library_dirs=[r'/usr/local/lib']
-        extra_link_args=['libaspic.a',
-        #'-L/usr/local/Cellar/gcc/6.3.0_1/lib/gcc/6',
-        '-lgomp','-lgfortran','-lquadmath',]
-    )],
-    language_level=3)
+setup(
+    name='pyaspic',
+    version='0.3.2',
+    description='Python interface to the Aspic library',
+    url='http://cp3.irmp.ucl.ac.be/~ringeval/aspic.html',
+    ext_modules = cythonize(
+        Extension("pyaspic", ["pyaspic.pyx"],
+            extra_objects=['catch.o', 'libaspic.a'],
+            extra_link_args=['-lgfortran','-lquadmath',]
+        ),
+        language_level=3,
+        annotate=False
+    )
 )
