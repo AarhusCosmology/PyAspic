@@ -22,4 +22,4 @@ Fortran `STOP` statements are intercepted and a Python exception is raised inste
 - ~~Functions containing complex and boolean data-types are not currently wrapped.~~
 - One may need to manually add the library paths to e.g. libgfortran and libquadmath inside `setup.py`.
 - ~~Only the return value of a function is returned in the wrapper, i.e. we are not yet supporting passed variables being changed. This could be fixed by reading the `intent` keywords for each variables.~~
-- Subroutines are currently not wrapped due to the limitation above.
+- ~~Subroutines are currently not wrapped due to the limitation above.
