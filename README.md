@@ -15,7 +15,7 @@ Here is what it does/attemps to do:
 - Generate Cython code for a Python module, `PyAspic`, holding all public functions from all modules by parsing the Fortran source code.
 - Built the Python module
 
-Fortran `STOP` statements are intercepted and a Python exception is raised insted.
+Fortran `STOP` statements are intercepted and a Python exception is raised instead.
 
 ## Issues
 
