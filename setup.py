@@ -9,7 +9,7 @@ setup(
     url='http://cp3.irmp.ucl.ac.be/~ringeval/aspic.html',
     ext_modules = cythonize(
         Extension("pyaspic", ["pyaspic.pyx"],
-            extra_objects=['catch.o', 'libaspic.a'],
+            extra_objects=['libaspic.a'],
             extra_link_args=['-lgfortran','-lquadmath',]
         ),
         language_level=3,

@@ -135,12 +135,16 @@ for source_file in all_sources:
                     argstring = ', '.join(['&' + key for key in function_args])
                     call_string = f'__{module_name}_MOD_{function_name}({argstring})'
                     if is_function:
-                        pyx_list.append(f'    cdef {type_arg_dict[function_name]} res = {call_string}')
+                        pyx_list.append(f'    cdef {type_arg_dict[function_name]} res')
+                    pyx_list.append('    if not setjmp(rrtmerr_jump):')
+                    if is_function:
+                        pyx_list.append(f'        res = {call_string}')
                     else:
-                        pyx_list.append(f'    {call_string}')
+                        pyx_list.append(f'        {call_string}')
                     first_return = ['res'] if is_function else []
                     all_returns = ', '.join(first_return + [key for key in inout_arg_dict if key != function_name])
-                    pyx_list.append(f'    return {all_returns}\n')
+                    pyx_list.append(f'        return {all_returns}')
+                    pyx_list.append('    raise ValueError(error_message.decode())\n')
                     pyx_file_lines += pyx_list
 
 
@@ -163,6 +167,18 @@ with open('aspic.h', 'w') as h_file, open('cpyaspic.pxd', 'w') as pxd_file:
 with open('pyaspic.pyx', 'w') as pyx_file:
     pyx_file.write('from libc cimport complex\n')
     pyx_file.write('from libcpp cimport bool\n')
+    pyx_file.write('from libc.setjmp cimport jmp_buf, longjmp, setjmp\n')
+    pyx_file.write('cdef jmp_buf rrtmerr_jump\n')
+    pyx_file.write('cdef char error_message[1000]\n')
     pyx_file.write('from cpyaspic cimport *\n')
+    pyx_file.write('cdef extern void _gfortran_stop_string (const char *error_string, int error_string_length):\n')
+    pyx_file.write('    cdef int nchars\n')
+    pyx_file.write('    cdef int i\n')
+    pyx_file.write('    nchars = error_string_length if error_string_length < 1000 else 999\n')
+    pyx_file.write('    for i in range(nchars):\n')
+    pyx_file.write('        error_message[i] = error_string[i]\n')
+    pyx_file.write(r"    error_message[nchars] = b'\n'")
+    pyx_file.write('\n    longjmp(rrtmerr_jump, 1)\n')
+
     for line in pyx_file_lines:
         pyx_file.write(line + '\n')
