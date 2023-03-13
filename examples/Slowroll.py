@@ -24,9 +24,9 @@ class Slowroll():
         self.a1t = -2*self.eps1+2*(2*C+1)*self.eps1**2-2*(C+1)*self.eps1*self.eps2
         self.a2t = 4*self.eps1**2-2*self.eps1*self.eps2
         
-        self.ns = 1+self.a1s/self.a0s
-        self.alphas = (self.a2s*self.a0s-self.a1s**2)/self.a0s**2
-        self.nt = self.a1t/self.a0t
-        self.alphat = (self.a2t*self.a0t-self.a1t**2)/self.a0t**2
+        self.n_s = 1+self.a1s/self.a0s
+        self.alpha_s = (self.a2s*self.a0s-self.a1s**2)/self.a0s**2
+        self.n_t = self.a1t/self.a0t
+        self.alpha_t = (self.a2t*self.a0t-self.a1t**2)/self.a0t**2
         self.r = 16*self.eps1
-        self.At = self.r*self.ns/self.nt
+        self.At = self.r*self.n_s/self.n_t
