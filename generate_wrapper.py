@@ -6,6 +6,7 @@ debug_function_name = 'not_used'
 header_file_lines = []
 pyx_file_lines = []
 public_functions = set()
+extra_functions = {'ln_rho_endinf_leadorder'}
 comment_buffer = []
 for source_file in all_sources:
     with open(source_file) as fin:
@@ -109,7 +110,7 @@ for source_file in all_sources:
                     comment_buffer = []
                     if is_recursive or module_name in {'inftools', 'kksfreheat', 'kksfsrevol'}:
                         continue
-                    if function_name not in public_functions:
+                    if function_name not in public_functions and function_name not in extra_functions:
                         continue
                     if any([type_arg_dict[key] == 'void' for key in function_args]):
                         print(function_name)
@@ -122,8 +123,8 @@ for source_file in all_sources:
 
                     # Build pyx wrapper
                     return_dict = {key:type_arg_dict[key] for key in inout_arg_dict}
-                    if len(return_dict) > 1:
-                        print(return_dict)
+                    #if len(return_dict) > 1:
+                    #    print(return_dict)
                     argstring = ', '.join([type_arg_dict[key] + ' ' + key for key in function_args])
                     pyx_list = []
                     pyx_list.append(f'cpdef {function_name}({argstring}):')
